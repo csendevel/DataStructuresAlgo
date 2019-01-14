@@ -1,3 +1,4 @@
+//#include "pch.h"
 #include <iostream>
 #include <string>
 #include <stdio.h>
@@ -5,66 +6,49 @@
 #include <algorithm>
 #include <vector>
 #include <math.h>
-#define N 1000010
+#define N 500
 
 using namespace std;
 
 typedef long long ll;
 
-int n, k;
-int r[N];
-const int s = 384;
-vector <int> answer;
+int n, m, ans, tmp;
+int mt[N], used[N];
+vector <int> g[N];
 
-struct block {
-	vector <int> a;
-	void push_back(int x) {
-		a.push_back(x);
+int dfs(int u, int now) {
+	if (used[u] == now) return 0;
+	used[u] = now;
+	for (auto to : g[u]) {
+		if (mt[to] == -1 || dfs(mt[to], now)) {
+			mt[to] = u;
+			return 1;
+		}
 	}
-
-	int get(int x, int y) {
-		return a[a.size() - 1];
-	}
-};
-
-block s_dec[s];
+	return 0;
+}
 
 int main() {
 	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
-	cin >> n;
+	cin >> n >> m;
 	for (int i = 0; i < n; i++) {
-		cin >> r[i];
-		s_dec[i / s].push_back(r[i]);
+		while (cin >> tmp && tmp != 0)
+			g[i].push_back(tmp - 1);
 	}
 
-	for (int i = 0; i < s; i++)
-		sort(s_dec[i].a.begin(), s_dec[i].a.end());
+	for (int i = 0; i < m; i++) mt[i] = -1;
 
-	int lp = 0, rp = 0, ans = -1;
+	for (int i = 0; i < n; i++)
+		dfs(i, i + 1);
 
-	cin >> k;
-	for (int i = 0; i < k; i++) {
-		ans = -1;
-		cin >> lp >> rp;
-		lp--;
+	for (int i = 0; i < m; i++)
+		if (mt[i] != -1) ans++;
 
-		while (lp < rp) {
-			if (lp % s || lp + s - 1 >= rp) {
-				ans = max(ans, r[lp]);
-				lp++;
-			}
-			else {
-				ans = max(ans, s_dec[lp / s].get(lp, rp));
-				lp += s;
-			}
-		}
-		answer.push_back(ans);
-	}
-
-	for (int i = 0; i < answer.size(); i++)
-		cout << answer[i] << " ";
-	cout << '\n';
+	cout << ans << '\n';
+	for (int i = 0; i < m; i++)
+		if (mt[i] != -1)
+			cout << mt[i] + 1 << " " << i + 1 << '\n';
 
 	return 0;
 }
