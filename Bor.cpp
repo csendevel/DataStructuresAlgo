@@ -5,7 +5,6 @@ using namespace std;
 
 typedef long long ll;
 
-
 struct vertex {
 	ll alpha[26]; // alphabet on string
 	bool term; // terminated vertex
