@@ -3,7 +3,7 @@
 #include <iostream> 
 #include <string.h>
 #include <algorithm>
-#define N 510
+#define N 520
 
 using namespace std;
 
