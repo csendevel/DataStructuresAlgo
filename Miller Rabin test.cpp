@@ -7,7 +7,6 @@ typedef unsigned long long ll;
 ll pows[70];
 const ll INF = 1e10 + 89;
 
-
 void fil() {
     pows[0] = 1ll;
     for (int i = 1; i <= 63; ++i)
