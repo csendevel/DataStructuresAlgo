@@ -1,53 +1,66 @@
-#include <algorithm>
-#include <cmath>
 #include <iostream>
+#include <stdio.h>
+#include <cassert>
+#include <algorithm>
+#include <math.h>
 #include <set>
 #include <vector>
+#include <string>
+#include <string.h>
+#include <time.h>
+
+#define N 500000
+#define  INF (1 << 30)
 
 using namespace std;
 
-int h[25001];
-int heapsize,t;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair <int, int> pii;
+typedef pair <ll, ll> pll;
 
-// heap sort
-void heapify(int i){
-    int l = 2*i, r = 2*i + 1;
-    int temp;
-    if(l < heapsize){
-        if(h[i] < h[l]){
-            swap(h[i],h[l]);
-            heapify(l);
-        }
-    }
-    if(r < heapsize){
-        if(h[i] < h[r]){
-            swap(h[i],h[r]);
-            heapify(r);
-        }
-    }
+int heapsize;
+ll ans;
+ll heap[N];
+
+void make_heap() {
+	int index = 0, parent = 0;
+	for (int i = 0; i < heapsize; i++) {
+		index = i;
+		while (index != 0) {
+			parent = (index - 1) / 2;
+			if (heap[index] <= heap[parent]) break;
+			swap(heap[index], heap[parent]);
+			index = parent;
+		}
+	}
+}
+
+//heap sort
+void heapify(int i) {
+	int l = 2 * i, r = 2 * i + 1;
+	if (l < heapsize) {
+		if (heap[i] < heap[l]) {
+			swap(heap[i], heap[l]);
+			heapify(l);
+		}
+	}
+	if (r < heapsize) {
+		if (heap[i] < heap[r]) {
+			swap(heap[i], heap[r]);
+			heapify(r);
+		}
+	}
 }
 
 int main() {
-    ios::sync_with_stdio(false); cin.tie(NULL);
-    
-    cin >> heapsize;
-    cin >> h[1];
-    
-    for(int i = 2; i < heapsize; i++){
-        cin >> h[i];
-        int k = i;
-        while(k/2 > 0){
-            if(h[k/2] < h[k]){
-                swap(h[k],h[k/2]);
-                k/=2;
-            } else break;
-        }
-    }
-    
-    while(cin >> t && t != -1){
-        cout << h[1] << endl;
-        h[1] = t;
-        heapify(1);
-    }
-    return 0;
-} 
+	ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+
+	cin >> heapsize;
+
+	for (int i = 0; i < heapsize; i++) cin >> heap[i];
+
+	make_heap();
+
+	return 0;
+}
