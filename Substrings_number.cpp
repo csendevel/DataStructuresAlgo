@@ -24,9 +24,6 @@ ll z[N];
 int main() {
 	ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
 
-	//freopen("input.txt", "rt", stdin);
-	//freopen("output.txt", "wt", stdout);
-
 	string s;
 
 	cin >> s;
