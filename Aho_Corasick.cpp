@@ -1,4 +1,4 @@
-﻿/*
+/*
 Че пацаны физтех?
 ┓┏┓┏┓┃
 ┛┗┛┗┛┃
@@ -32,17 +32,17 @@ struct bohr_node {
 	bool leaf;
 	int pattern_num; //number of line that ended in this node
 	int next_ch[ALP]; //next characters
-	int	suff_links[ALP];
+	int	suff_links[ALP];  
 	int suff_link;
 	int g_suff_link; //good suffix link
 	int parent;
 	char par_symb; //symbol on edge from parent node to current
-
-	bohr_node() {
-		leaf = false;
+	
+	bohr_node() { 
+		leaf = false;  
 		pattern_num = suff_link = g_suff_link = parent = -1;
-		memset(next_ch, -1, sizeof(next_ch));
-		memset(suff_links, -1, sizeof(suff_links));
+		memset(next_ch, -1, sizeof(next_ch)); 
+		memset(suff_links, -1, sizeof(suff_links));  
 	}
 };
 
@@ -125,17 +125,17 @@ int main() {
 	v.par_symb = '$';
 	bohr.push_back(v);
 
+	string text = "";
+	cin >> text;
+
 	int pattern_num;
 	cin >> pattern_num;
 	string pattern = "";
-	for (int i = 0; i < pattern_num; i++) {
+	for(int i = 0; i < pattern_num; i++) {
 		cin >> pattern;
 		patterns.push_back(pattern);
 		add_string(pattern, i);
 	}
-
-	string text = "";
-	cin >> text;
 
 	int res_pos = 0;
 	int u = 0;
@@ -143,7 +143,7 @@ int main() {
 		res_pos = get_transition(res_pos, text[i] - 'a');
 		u = res_pos;
 		while (u != 0) {
-			if (bohr[u].leaf) cout << i - patterns[bohr[u].pattern_num].length() + 2 << " " << patterns[bohr[u].pattern_num] << endl;
+			if(bohr[u].leaf) cout << i - patterns[bohr[u].pattern_num].length() + 2 << " " << patterns[bohr[u].pattern_num] << endl;
 			u = get_good_suff_link(u);
 		}
 	}
