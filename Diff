@@ -1,0 +1,166 @@
+#include <iostream>
+#include <string>
+#include <stdio.h>
+#include <ctype.h>
+#include <algorithm>
+#include <vector>
+#include <math.h>
+#include <assert.h>
+#include <fstream>
+#include <sstream>
+#include <time.h>
+#include <map>
+#include <queue>
+
+const int N = 10000; // string length
+
+using namespace std;
+
+typedef unsigned long long ull;
+typedef long long ll;
+
+bool used[N * N];
+
+int main() {
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+	string a, b;
+
+	//cin >> a >> b;
+	//a = "asd\naaa\n";
+	//b = "asd\naab\n";
+
+	queue <pair<int, int>> q;
+
+	q.push(make_pair(0, 0));
+	used[0] = true;
+
+	map <int, int> p;
+
+	ifstream inFile;
+	inFile.open("a.txt");
+	stringstream strStream;
+	strStream << inFile.rdbuf();
+	a = strStream.str();
+	inFile.close();
+
+	inFile.open("b.txt");
+	stringstream strStream2;
+	strStream2 << inFile.rdbuf();
+	b = strStream2.str();
+	inFile.close();
+	
+	int m = a.size();
+	int n = b.size();
+	
+	int top_num;
+
+	while (!q.empty()) {
+		pair<int, int> top = q.front();
+		q.pop();
+
+		top_num = top.first * (m + 1) + top.second;
+
+		if (top.first == m && top.second == n) break;
+
+		if (a[top.first] == b[top.second]) {
+			pair <int, int> t = make_pair(top.first + 1, top.second + 1);
+			int num = t.first * (m + 1) + t.second;
+
+			if(!used[num] && t.first <= m && t.second <= n){
+				q.push(t);
+				used[num] = true;
+				p[num] = top_num;
+			}
+			continue;
+		}
+
+		pair <int, int> t = make_pair(top.first + 1, top.second);
+
+		int num = t.first * (m + 1) + t.second;
+		if (!used[num] && t.first <= m && t.second <= n) {
+			q.push(t);
+			used[num] = true;
+			p[num] = top_num;
+		}
+
+		t = make_pair(top.first, top.second + 1);
+
+		num = t.first * (m + 1) + t.second;
+		if (!used[num] && t.first <= m && t.second <= n) {
+			q.push(t);
+			used[num] = true;
+			p[num] = top_num;
+		}
+	}
+
+	vector <pair<int, int>> ans;
+
+	int tmp = 0;
+	while (true) {
+		ans.push_back({ top_num / (m + 1), top_num % (m + 1) });
+			
+		if(p.find(top_num) != p.end())
+			top_num = p[top_num];
+		else break;
+	}
+
+	vector <char> signs;
+	reverse(ans.begin(), ans.end());
+
+	for (int i = 0; i < ans.size() - 1; i++) {
+		int tmp0 = ans[i + 1].first - ans[i].first;
+		int tmp1 = ans[i + 1].second - ans[i].second;
+ 
+		if (tmp0 == 1 && tmp1 == 1) {
+			signs.push_back('0');
+			continue;
+		}
+
+		if (tmp0 == 1 && ans[i].first < m)
+			signs.push_back('+');
+				
+		if (tmp1 == 1 && ans[i].second < n)
+			signs.push_back('-');
+	}
+
+	ans.clear();
+	signs.pop_back();
+
+	string inserted_str = "";
+	string deleted_str = "";
+	int a_pos = 0, b_pos = 0, str_cnt = 0;
+	for (auto i : signs) {
+		//if (a_pos < m && b_pos < n) {
+			if (a[a_pos] == '\n' && b[b_pos] == '\n') {
+				if (deleted_str == inserted_str) {
+					cout << ++str_cnt << "  " << deleted_str << '\n';
+					a_pos++;
+					b_pos++;
+				}
+				else {
+					++str_cnt;
+					if (!deleted_str.empty()) {
+						cout << str_cnt << "- " << deleted_str << '\n';
+						a_pos++;
+					}
+					if (!inserted_str.empty()) {
+						cout << str_cnt << "+ " << inserted_str << '\n';
+						b_pos++;
+					}
+				}
+				deleted_str.clear();
+				inserted_str.clear();
+			}
+		//}
+		
+		if (i == '0') {
+			deleted_str += a[a_pos++];
+			inserted_str += b[b_pos++];
+		}
+		if (i == '-') deleted_str += a[a_pos++];
+		if (i == '+') inserted_str += b[b_pos++];
+	}
+
+	return 0;
+}
